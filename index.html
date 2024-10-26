@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Site</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #0a0f24;
+            color: #e0f7ff;
+        }
+        .container {
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+            animation: fadeIn 1s forwards;
+        }
+        .container.active { display: flex; }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            background-color: #1f1f2f;
+            color: #e0f7ff;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #1f6eff;
+            color: #e0f7ff;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .chat-box {
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #e0f7ff;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background-color: #12142b;
+        }
+        .message {
+            text-align: left;
+            padding: 10px;
+            background-color: #1f1f2f;
+            margin: 5px 0;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+        .message .username {
+            font-weight: bold;
+            color: #29abe2;
+            font-size: 0.8em;
+            margin-bottom: 4px;
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Step-by-Step Message Sequence -->
+    <div id="message1" class="container active">
+        <h2>I love my mom Joumana ❤️ but why?</h2>
+        <button onclick="showNext('message1', 'message2')">Next</button>
+    </div>
+
+    <div id="message2" class="container">
+        <h2>First, she is the best mom ever!</h2>
+        <button onclick="showNext('message2', 'message3')">Next</button>
+    </div>
+
+    <div id="message3" class="container">
+        <h2>She takes care of me.</h2>
+        <button onclick="showNext('message3', 'message4')">Next</button>
+    </div>
+
+    <div id="message4" class="container">
+        <h2>She is the most amazing mother in this world!</h2>
+        <button onclick="showNext('message4', 'loginPage')">Next</button>
+    </div>
+
+    <!-- Login Page -->
+    <div id="loginPage" class="container">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+        <p id="loginError" style="color: red; display: none;">Incorrect credentials, try again!</p>
+    </div>
+
+    <!-- Chat Room -->
+    <div id="chatRoom" class="container">
+        <h2>Chat Room <button onclick="logout()" style="float: right; padding: 5px 10px;">Logout</button></h2>
+        <div id="chatBox" class="chat-box"></div>
+        <input type="text" id="messageInput" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        // User data
+        const users = {
+            "tarek": "T121212t",
+            "taqwa": "T121212t",
+            "nana": "T121212t"
+        };
+
+        // Store the logged-in username
+        let currentUser = localStorage.getItem('currentUser') || null;
+
+        // Show the correct page based on login status
+        window.onload = function() {
+            if (currentUser) {
+                document.getElementById('chatRoom').classList.add('active');
+            } else {
+                document.getElementById('loginPage').classList.add('active');
+            }
+        };
+
+        // Function to show the next section
+        function showNext(currentId, nextId) {
+            document.getElementById(currentId).classList.remove('active');
+            document.getElementById(nextId).classList.add('active');
+        }
+
+        // Login function with multiple accounts
+        function login() {
+            const username = document.getElementById('username').value.toLowerCase();
+            const password = document.getElementById('password').value;
+
+            if (users[username] === password) {
+                currentUser = username;
+                localStorage.setItem('currentUser', username);
+                document.getElementById('loginPage').classList.remove('active');
+                document.getElementById('chatRoom').classList.add('active');
+                document.getElementById('loginError').style.display = 'none';
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            document.getElementById('chatRoom').classList.remove('active');
+            document.getElementById('loginPage').classList.add('active');
+        }
+
+        // Chat function to send messages with user name
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const messageText = messageInput.value.trim();
+
+            if (messageText && currentUser) {
+                const chatBox = document.getElementById('chatBox');
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message');
+
+                // Add the username and message text
+                messageElement.innerHTML = `<span class="username">${currentUser}:</span> ${messageText}`;
+
+                chatBox.appendChild(messageElement);
+                messageInput.value = '';
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html>
