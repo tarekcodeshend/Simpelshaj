@@ -1,3 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Love Note</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #0a0f24;
+            color: #e0f7ff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+        .container {
+            text-align: center;
+            max-width: 600px;
+        }
+        .message, .button {
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+        .message {
+            font-size: 2em;
+            line-height: 1.5;
+            margin: 20px 0;
+        }
+        .button {
+            background-color: #1f6eff;
+            color: #e0f7ff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            cursor: pointer;
+            animation-delay: 1s;
+        }
+        .button:hover {
+            animation: pulse 0.6s infinite;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="message" id="message1">I love my mom Joumana ❤️ but why?</div>
+        <button class="button" id="button1" onclick="nextMessage(1)">Next</button>
+        
+        <div class="message" id="message2" style="display: none;">First, she is the best mom ever!</div>
+        <button class="button" id="button2" style="display: none;" onclick="nextMessage(2)">Next</button>
+        
+        <div class="message" id="message3" style="display: none;">She takes care of me.</div>
+        <button class="button" id="button3" style="display: none;" onclick="nextMessage(3)">Next</button>
+        
+        <div class="message" id="message4" style="display: none;">She is the most amazing mother in this world!</div>
     </div>
 
     <script>
