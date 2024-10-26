@@ -1,0 +1,22 @@
+    </div>
+
+    <script>
+        function nextMessage(step) {
+            document.getElementById(`message${step}`).style.display = 'none';
+            document.getElementById(`button${step}`).style.display = 'none';
+            
+            const nextMsg = document.getElementById(`message${step + 1}`);
+            const nextBtn = document.getElementById(`button${step + 1}`);
+            
+            if (nextMsg) {
+                nextMsg.style.display = 'block';
+                nextMsg.style.animation = 'fadeIn 1s forwards';
+            }
+            if (nextBtn) {
+                nextBtn.style.display = 'inline-block';
+                nextBtn.style.animation = 'fadeIn 1s forwards';
+            }
+        }
+    </script>
+</body>
+</html>
