@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #282c34;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        #messageContainer {
+            width: 80%;
+            max-height: 400px;
+            overflow-y: scroll;
+            background-color: #3b4047;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .message {
+            margin: 5px 0;
+        }
+        #loginForm, #chatContainer {
+            display: none;
+        }
+        input[type="text"], input[type="password"] {
+            padding: 10px;
+            margin: 5px 0;
+            width: 80%;
+            border: none;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #61dafb;
+            color: black;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #21a1f1;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>I love my mom Joumana ❤️ but why?</h1>
+    <button id="nextButton">Next</button>
+
+    <div id="loginForm">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button id="loginButton">Login</button>
+    </div>
+
+    <div id="chatContainer">
+        <div id="messageContainer"></div>
+        <input type="text" id="messageInput" placeholder="Type your message..." required>
+        <button id="sendMessageButton">Send</button>
+        <button id="logoutButton" style="display:none;">Logout</button>
+    </div>
+
+    <script>
+        const API_URL = 'https://melanies.onrender.com/messages'; // Your Render API URL
+        const nextButton = document.getElementById('nextButton');
+        const loginForm = document.getElementById('loginForm');
+        const chatContainer = document.getElementById('chatContainer');
+        const messageContainer = document.getElementById('messageContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendMessageButton = document.getElementById('sendMessageButton');
+        const logoutButton = document.getElementById('logoutButton');
+
+        let currentUser = null;
+
+        nextButton.addEventListener('click', () => {
+            nextButton.style.display = 'none';
+            loginForm.style.display = 'block';
+        });
+
+        const users = {
+            tarek: 'T121212t',
+            taqwa: 'T121212t',
+            nana: 'T121212t'
+        };
+
+        document.getElementById('loginButton').addEventListener('click', () => {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (users[username] && users[username] === password) {
+                currentUser = username;
+                loginForm.style.display = 'none';
+                chatContainer.style.display = 'block';
+                fetchMessages();
+                setInterval(fetchMessages, 5000); // Fetch new messages every 5 seconds
+            } else {
+                alert('Invalid username or password');
+            }
+        });
+
+        sendMessageButton.addEventListener('click', () => {
+            const messageText = messageInput.value;
+            if (messageText && currentUser) {
+                sendMessage(currentUser, messageText);
+                messageInput.value = ''; // Clear input after sending
+            }
+        });
+
+        logoutButton.addEventListener('click', () => {
+            currentUser = null;
+            chatContainer.style.display = 'none';
+            loginForm.style.display = 'block';
+            messageContainer.innerHTML = ''; // Clear messages on logout
+        });
+
+        async function fetchMessages() {
+            const response = await fetch(API_URL);
+            const messages = await response.json();
+            displayMessages(messages);
+        }
+
+        function displayMessages(messages) {
+            messageContainer.innerHTML = ''; // Clear current messages
+            messages.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = 'message';
+                div.textContent = `${msg.user}: ${msg.text}`;
+                messageContainer.appendChild(div);
+            });
+            messageContainer.scrollTop = messageContainer.scrollHeight; // Scroll to the bottom
+        }
+
+        async function sendMessage(user, text) {
+            await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user, text })
+            });
+            fetchMessages(); // Refresh messages
+        }
+    </script>
+</body>
+</html>
